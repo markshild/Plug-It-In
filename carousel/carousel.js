@@ -6,29 +6,76 @@
   $.Carousel = function ($el) {
     this.$el = $($el);
     this.activeIdx = 0;
+    this.transitioning = false
 
     this.$el.on('click', '.slide-left', function (event) {
-      console.log($("li").eq(this.activeIdx))
-      var $currentChild = $('li').eq(this.activeIdx);
-      $currentChild.removeClass('active');
-      this.activeIdx--;
-      if (this.activeIdx < 0) {
-        this.activeIdx += 3;
+      if (this.transitioning) {
+        return;
       }
+      this.transitioning = true;
+
+      var $currentChild = $('li').eq(this.activeIdx);
+      var leftIdx = $.Carousel.correctIdx(this.activeIdx - 1);
+      var $nextChild = $('li').eq(leftIdx);
+
+      $nextChild.addClass('active left');
+      setTimeout( function () {
+        $nextChild.removeClass('left');
+        $currentChild.addClass('right');
+      },0);
+
+
+      this.activeIdx--;
+      this.activeIdx = $.Carousel.correctIdx(this.activeIdx);
       $("li").eq(this.activeIdx).addClass("active");
+
+      this.$el.one('transitionend', 'li', function(event) {
+        $currentChild.removeClass('active right');
+        this.transitioning = false;
+      }.bind(this));
 
     }.bind(this));
 
     this.$el.on('click', '.slide-right', function (event) {
-      var $currentChild = $('li').eq(this.activeIdx).removeClass('active');
-      this.activeIdx++ ;
-      if (this.activeIdx > 2) {
-        this.activeIdx -= 3;
+      if (this.transitioning) {
+        return;
       }
+      this.transitioning = true;
+
+      var $currentChild = $('li').eq(this.activeIdx);
+      var rightIdx = $.Carousel.correctIdx(this.activeIdx + 1);
+      var $nextChild = $('li').eq(rightIdx);
+
+      $nextChild.addClass('active right');
+      setTimeout( function () {
+        $nextChild.removeClass('right');
+        $currentChild.addClass('left');
+      },0);
+
+
+      this.activeIdx++ ;
+      this.activeIdx = $.Carousel.correctIdx(this.activeIdx);
       $("li").eq(this.activeIdx).addClass("active");
+
+      this.$el.one('transitionend', 'li', function(event) {
+        $currentChild.removeClass('active left');
+        this.transitioning = false;
+      }.bind(this));
+
     }.bind(this));
 
   }
+
+  $.Carousel.correctIdx = function (idx) {
+    if (idx < 0) {
+      return idx + 3;
+    } else if (idx > 2) {
+      return idx -3;
+    } else {
+      return idx;
+    }
+  };
+
 
   $.fn.carousel = function () {
     return this.each(function () {
