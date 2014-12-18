@@ -78,6 +78,7 @@
 
 
   $.fn.carousel = function () {
+    console.log(this)
     return this.each(function () {
       new $.Carousel(this);
     });
