@@ -1,0 +1,28 @@
+body, ul, li, a {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  font-style: inherit;
+  font-weight: inherit;
+
+}
+
+li {
+  display: none;
+  list-style: none;
+}
+
+ul.carousel {
+  height: 600px;
+  width: 800px;
+  border: 5px solid black;
+}
+
+ul.items {
+  height: 100%;
+  width: 100%;
+}
+
+li.active {
+  display: block;
+}
