@@ -19,16 +19,25 @@ $.Tabs = function(el) {
 
 $.Tabs.prototype.clickTab = function (event) {
   event.preventDefault();
-  this.$activeTab.removeClass("active");
-  console.log(this.$activeLink);
+  this.$activeTab.addClass("transitioning");
   this.$activeLink.removeClass("active");
-  console.log(this.$activeLink);
   var $newActiveLink = $(event.target);
   $newActiveLink.addClass("active");
-  var $newActiveTab = $($newActiveLink.attr("href")).addClass("active");
-
-  this.$activeTab = $newActiveTab;
   this.$activeLink = $newActiveLink;
+  $($newActiveLink.attr("href")).addClass("transitioning");
+  this.$activeTab.one('transitionend', function(event){
+    this.$activeTab.removeClass("transitioning");
+    this.$activeTab.removeClass("active");
+
+    var $newActiveTab = $($newActiveLink.attr("href"));
+    this.$activeTab = $newActiveTab;
+    this.$activeTab.addClass("active");
+    this.$activeTab.removeClass("transitioning");
+
+  }.bind(this))
+
+
+
 
 }
 

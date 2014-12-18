@@ -19,8 +19,16 @@ li {
 
 li.tab-pane {
   display: none;
+  -webkit-transition: opacity .5s;
+  opacity: 0;
 }
 
 li.tab-pane.active {
   display: block;
+  opacity: 1;
+}
+
+li.tab-pane.transitioning {
+  display: block;
+  opacity: 0;
 }
